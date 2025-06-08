@@ -1,25 +1,21 @@
 
 services:
-###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    image: mariadb:10.3.30
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
-      timeout: 5s
-      retries: 5
-      start_period: 60s
-    volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      MARIADB_DATABASE: 'app'
+      MARIADB_USER: 'user'
+      MARIADB_PASSWORD: 'password'
+      MARIADB_ROOT_PASSWORD: 'rootpass'
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'no'
+    ports:
+      - '3309:3306'
 
-volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - '8009:80'
+    environment:
+      PMA_HOST: database
+    depends_on:
+      - database

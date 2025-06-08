@@ -3,3 +3,10 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+
+todo:
+  resource:
+    path: ../src/TodoList/Infrastructure/Controller/
+    namespace: App\TodoList\Infrastructure\Controller
+  type: attribute
